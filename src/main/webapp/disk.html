@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网盘主页</title>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="container">
+    <h1>我的网盘</h1>
+    <!-- 文件夹列表 -->
+    <!-- 文件列表 -->
+    <div class="file-list">
+        <h2>文件列表</h2>
+        <table class="table table-bordered" id="file-list">
+            <thead>
+            <tr>
+                <th>文件名</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <!-- 上传文件 -->
+    <div class="upload-section">
+        <h2>上传文件</h2>
+        <form id="upload-form">
+            <input type="file" id="file-upload-input" style="display: none;">
+            <label for="file-upload-input" class="btn btn-primary">选择文件</label>
+            <button type="submit" class="btn btn-success">上传</button>
+        </form>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js">
+</script>
+<script >
+    function loadFiles() {
+// 创建一个新的XMLHttpRequest对象
+        const xhr = new XMLHttpRequest();
+// 设置请求方式和URL
+        xhr.open('GET', '/MyBlog_war_exploded/upload', true);
+// 处理请求完成后的回调
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                const fileList = document.getElementById('filelist').
+                getElementsByTagName('tbody')[0];
+                const fileData = JSON.parse(xhr.responseText);
+                fileData.forEach(fileName => {
+                    const tr = document.createElement('tr');
+                    const nameCell = document.createElement('td');
+                    nameCell.innerText = fileName;
+                    tr.appendChild(nameCell);
+                    const actionCell = document.createElement('td');
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = '/MyBlog_war_exploded/files/' +
+                        encodeURIComponent(fileName);
+                    downloadLink.innerText = '下载';
+                    downloadLink.onclick = () => downloadFile(file.id);
+                    actionCell.appendChild(downloadLink);
+                    tr.appendChild(actionCell);
+                    fileList.appendChild(tr);
+                });
+            } else {
+                console.error('Error fetching file list:', xhr.status);
+            }
+        };
+        // 发送请求
+        xhr.send();
+    }
+    // 文件上传功能
+    function uploadFile() {
+        const form = document.getElementById('upload-form');
+        const fileInput = document.getElementById('file-upload-input');
+        const file = fileInput.files[0];
+        if (file) {
+            const formData = new FormData();
+            formData.append('file', file);
+            // 向后台发送文件上传请求
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/MyBlog_war_exploded/upload', true);
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    // 上传成功后刷新文件列表
+                    loadFiles();
+                    alert('文件上传成功！');
+                } else {
+                    alert('文件上传失败！');
+                }
+            };
+            xhr.send(formData);
+            // 阻止表单默认提交行为
+            form.reset();
+            return false;
+        } else {
+            alert('请选择一个文件进行上传！');
+        }
+    }
+    // 文件下载功能
+    function downloadFile(fileId) {
+        // 在这里可以实现文件下载的后端逻辑
+        alert('文件下载功能待实现！');
+    }
+    // 页面加载完成后执行初始化
+    document.addEventListener('DOMContentLoaded', () => {
+        loadFiles();
+        // 为上传按钮绑定点击事件，调用uploadFile()函数
+        const form = document.getElementById('upload-form');
+        form.addEventListener('submit', uploadFile);
+    });
+</script>
+</body>
+</html>
