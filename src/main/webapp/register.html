@@ -65,9 +65,9 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
 <script>
-    $(document).submit(function (){
+    $(document).ready(function (){
         //提交登录表单时的操作
-        $("#registerForm").submit()(function (event){
+        $("#registerForm").submit(function (event){
             //阻止表单的默认提交行为
             event.preventDefault();
             var username = $("#username").val();
