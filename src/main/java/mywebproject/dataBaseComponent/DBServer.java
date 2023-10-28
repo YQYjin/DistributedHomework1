@@ -11,7 +11,7 @@ public class DBServer {
     private static Connection conn = null;
 
     private DBServer() {
-        String url = "jdbc:mysql://localhost:3306/";
+        String url = "jdbc:mysql://localhost:3306/";//这里没写数据库名
         String user = "root";//替换成你自已的数据库用户名
         String password = "123456";//这里替换成你自已的数据库用户密码
         String sqlStr = "";

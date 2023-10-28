@@ -24,8 +24,8 @@ public class RegisterServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
         // 获取前端表单的参数
-        String name = request.getParameter("name");
-        String password = request.getParameter("pwd");
+        String name = request.getParameter("username");
+        String password = request.getParameter("password");
         System.out.println("register name = " + name);
         System.out.println("register password = " + password);
         //int registerCode=UserService.userService.register(name, password);
